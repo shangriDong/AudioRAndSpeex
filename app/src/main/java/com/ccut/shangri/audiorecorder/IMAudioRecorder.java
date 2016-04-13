@@ -1,5 +1,6 @@
 package com.ccut.shangri.audiorecorder;
 
+import android.media.AmrInputStream;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
@@ -33,10 +34,13 @@ public class IMAudioRecorder implements Runnable {
     private List<RecordPCMData> mPcmList;
     private Object mPcmMutex;
     private int encoder_packagesize = 1024;
+    private int mPcmCount;
+    private IMSpeexDSP mIMSpeexDSP = null;
 
-    public IMAudioRecorder(List<RecordPCMData> l, Object mutex) {
+    public IMAudioRecorder(List<RecordPCMData> l, Object mutex, IMSpeexDSP IMSpeexDSP) {
         mPcmList = l;
         mPcmMutex = mutex;
+        this.mIMSpeexDSP = IMSpeexDSP;
     }
 
     @Override
@@ -82,6 +86,7 @@ public class IMAudioRecorder implements Runnable {
                     dos.writeShort(buffer[i]);
 
                 }
+                mPcmCount++;
                 RecordPCMData rd = new RecordPCMData();
                 synchronized (mPcmMutex) {
                     rd.size = bufferReadResult;
@@ -90,9 +95,12 @@ public class IMAudioRecorder implements Runnable {
                 }
                 Log.d(TAG, "bufferReadResult = " + bufferReadResult + "mMinBufferSize = " + mMinBufferSize);
             }
+
             audioRecord.stop();
             audioRecord.release();
             dos.close();
+
+            mIMSpeexDSP.setProcessDenoiseFlag(false);
 
         } catch (Throwable t) {
             Log.e(TAG, "Recording Failed");

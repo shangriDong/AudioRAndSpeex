@@ -10,20 +10,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class AmrEncoder {
-    
-    public static void pcm2Amr(String pcmPath , String amrPath) {
-    	FileInputStream fis;
-		try {
-			fis = new FileInputStream(pcmPath);
-			pcm2Amr(fis, amrPath);
-			fis.close();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+    public static void pcm2Amr(String pcmPath, String amrPath) {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(pcmPath);
+            pcm2Amr(fis, amrPath);
+            fis.close();
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     public static void pcm2Amr(InputStream pcmStream, String amrPath) {
         try {
             AmrInputStream ais = new AmrInputStream(pcmStream);
@@ -38,9 +38,9 @@ public class AmrEncoder {
             out.write(0x41);
             out.write(0x4D);
             out.write(0x52);
-            out.write(0x0A);   
-            while((len = ais.read(buf)) >0){
-                out.write(buf,0,len);
+            out.write(0x0A);
+            while ((len = ais.read(buf)) > 0) {
+                out.write(buf, 0, len);
             }
             out.close();
             ais.close();
@@ -48,7 +48,7 @@ public class AmrEncoder {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }       
+        }
     }
-    
+
 }

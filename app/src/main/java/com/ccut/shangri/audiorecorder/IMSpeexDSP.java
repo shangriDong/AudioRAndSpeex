@@ -46,7 +46,7 @@ public class IMSpeexDSP implements Runnable {
     @Override
     public void run() {
 
-        while (isProcessDenoiseFlag) {
+        while (true) {
             if (mPcmList.size() == 0) {
                 Log.d(TAG, "no data need to do encode");
                 try {
@@ -65,11 +65,14 @@ public class IMSpeexDSP implements Runnable {
                     }
                 }
 
-                InputStream sbs = new ByteArrayInputStream(processedData);
+                /*InputStream sbs = new ByteArrayInputStream(processedData);
                 String rootPath = Environment.getExternalStorageDirectory().getPath();
                 String amrPath = rootPath + "/test.amr";
-                mAmrEncoder.pcm2Amr(sbs, amrPath);
+                mAmrEncoder.pcm2Amr(sbs, amrPath);*/
                 processPcmCount++;
+                if (!isProcessDenoiseFlag && processPcmCount >= 1000) {
+                    break;
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.ccut.shangri.audiorecorder;
 import android.app.Activity;
 import android.media.AmrInputStream;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -32,9 +33,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mPcmDataList = Collections.synchronizedList(new LinkedList<IMAudioRecorder.RecordPCMData>());
-        mAudioRecorder = new IMAudioRecorder(mPcmDataList, mPcmMutex);
         mAudioTrack = new IMAudioTrack();
         mSpeexDsp = new IMSpeexDSP(mPcmDataList, mPcmMutex);
+
+        mAudioRecorder = new IMAudioRecorder(mPcmDataList, mPcmMutex, mSpeexDsp);
+
         mInputStream = new InputStream() {
             @Override
             public int read() throws IOException {
@@ -60,6 +63,7 @@ public class MainActivity extends Activity {
             switch (v.getId()) {
                 case R.id.start_record_btn:
                     new Thread(mAudioRecorder).start();
+                    new Thread(mSpeexDsp).start();
                     break;
                 case R.id.stop_record_btn:
                     mAudioRecorder.setRecording(false);
@@ -68,7 +72,7 @@ public class MainActivity extends Activity {
                     new Thread(mAudioTrack).start();
                     break;
                 case R.id.preocess_play_amr_btn:
-                    new Thread(mSpeexDsp).start();
+                    //new Thread(mSpeexDsp).start();
                     break;
                 default:
                     break;
@@ -110,6 +114,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void run() {
+                Log.i("shangri", "encode success");
                 //waitDialog.dismiss();
                 //hintView.setText(getResources().getString(R.string.transfer_result));
                 //ToastUtil.showShort(MainActivity.this, R.string.success_hint);
