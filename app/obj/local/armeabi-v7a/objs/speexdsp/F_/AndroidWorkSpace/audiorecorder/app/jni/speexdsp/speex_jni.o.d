@@ -45,7 +45,7 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/An
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_config_types.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_preprocess.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/android/log.h \
- D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/stdio.h
+ D:/Android/android-ndk-r10d/sources/cxx-stl/gnu-libstdc++/4.8/include/fstream
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/jni.h:
 
@@ -137,4 +137,4 @@ F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_preproce
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/android/log.h:
 
-D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/stdio.h:
+D:/Android/android-ndk-r10d/sources/cxx-stl/gnu-libstdc++/4.8/include/fstream:

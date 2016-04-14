@@ -1,5 +1,6 @@
 F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/preprocess.o: \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/preprocess.c \
+ F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/config.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/math.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/cdefs.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/cdefs_elf.h \
@@ -30,7 +31,6 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/An
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_echo.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/arch.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_types.h \
- F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fixed_generic.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fftwrap.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/filterbank.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/math_approx.h \
@@ -42,6 +42,8 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/An
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/alloca.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/strings.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/memory.h
+
+F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/config.h:
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/math.h:
 
@@ -102,8 +104,6 @@ F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_echo.h:
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/arch.h:
 
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_types.h:
-
-F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fixed_generic.h:
 
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fftwrap.h:
 

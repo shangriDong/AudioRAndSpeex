@@ -33,6 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/preocess_play_amr_btn"
+        android:text="降噪"
+        android:layout_below="@id/start_record_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/play_amr_btn"
         android:text="播放降噪后amr"
-        android:layout_toRightOf="@id/play_pcm_btn"/>
+        android:layout_below="@id/start_record_btn"
+        android:layout_toRightOf="@id/start_record_btn"/>
 </RelativeLayout>

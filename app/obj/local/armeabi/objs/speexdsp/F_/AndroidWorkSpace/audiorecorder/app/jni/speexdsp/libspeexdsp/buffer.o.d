@@ -1,5 +1,6 @@
 F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi/objs/speexdsp/F_/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/buffer.o: \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/buffer.c \
+ F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/config.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/os_support.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/string.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/cdefs.h \
@@ -27,9 +28,10 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi/objs/speexdsp/F_/Androi
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/arch.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_types.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_config_types.h \
- F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fixed_generic.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_buffer.h \
  F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_types.h
+
+F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/config.h:
 
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/os_support.h:
 
@@ -84,8 +86,6 @@ F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/arch.h:
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_types.h:
 
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speexdsp_config_types.h:
-
-F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/libspeexdsp/fixed_generic.h:
 
 F:/AndroidWorkSpace/audiorecorder/app//jni/speexdsp/include/speex/speex_buffer.h:
 

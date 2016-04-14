@@ -17,11 +17,15 @@ import java.io.InputStream;
  */
 public class IMAudioTrack implements Runnable{
     private final static String TAG = "Shangri";
+    private String filename;
+    public IMAudioTrack(String filename) {
+        this.filename = filename;
+    }
 
     @Override
     public void run() {
         // Get the file we want to playback.
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + filename);
         // Get the length of the audio stored in the file (16 bit so 2 bytes per short)
         // and create a short array to store the recorded audio.
         int musicLength = (int)(file.length()/2);
@@ -49,8 +53,8 @@ public class IMAudioTrack implements Runnable{
             // Create a new AudioTrack object using the same parameters as the AudioRecord
             // object used to create the file.
             AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                    11025,
-                    AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                    8000,
+                    AudioFormat.CHANNEL_IN_DEFAULT,
                     AudioFormat.ENCODING_PCM_16BIT,
                     musicLength*2,
                     AudioTrack.MODE_STREAM);

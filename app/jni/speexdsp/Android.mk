@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE:= libspeexdsp
 
-LOCAL_CFLAGS = -DFIXED_POINT -DEXPORT="" -UHAVE_CONFIG_H -DUSE_SMALLFT
+LOCAL_CFLAGS = -DHAVE_CONFIG_H
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/libspeexdsp
@@ -37,8 +37,7 @@ LOCAL_SRC_FILES +=\
   $(LOCAL_PATH)/libspeexdsp/buffer.c \
   $(LOCAL_PATH)/libspeexdsp/scal.c \
   $(LOCAL_PATH)/speex_jni.cpp
-  
-LOCAL_PROGUARD_ENABLED := disabled
+
 LOCAL_LDLIBS := -llog
 
 include $(BUILD_SHARED_LIBRARY)

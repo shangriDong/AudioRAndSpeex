@@ -9,11 +9,14 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,32 +24,26 @@ import java.util.Objects;
  * Created by admin on 2016/4/11.
  */
 public class IMAudioRecorder implements Runnable {
-
+    private final static SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
     private static final String TAG = "Shangri";
-    private int frequency = 11025; //采样频率，每秒钟能够采样的次数
-    private int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO; //声道设置 MONO单声道
+    private int frequency = 8000; //采样频率，每秒钟能够采样的次数
+    private int channelConfiguration = AudioFormat.CHANNEL_IN_DEFAULT; //声道设置 MONO单声道
     private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT; //编码格式PCM 16BIT
     private int audioSource = MediaRecorder.AudioSource.MIC; //声音来源MIC
     private boolean isRecording;
     private AudioRecord audioRecord;
     private int mMinBufferSize; //采集数据需要的缓冲区的大小
     private boolean mRun = false;
-    private List<RecordPCMData> mPcmList;
-    private Object mPcmMutex;
-    private int encoder_packagesize = 1024;
-    private int mPcmCount;
-    private IMSpeexDSP mIMSpeexDSP = null;
-
-    public IMAudioRecorder(List<RecordPCMData> l, Object mutex, IMSpeexDSP IMSpeexDSP) {
-        mPcmList = l;
-        mPcmMutex = mutex;
-        this.mIMSpeexDSP = IMSpeexDSP;
+    private IMSpeexDSP mIMSpeexDSP;
+    private AmrEncoder mAmrEncoder;
+    private String mAudioAmrFileName = "testa";
+    public IMAudioRecorder() {
+        mIMSpeexDSP = new IMSpeexDSP();
+        mAmrEncoder = new AmrEncoder();
     }
 
     @Override
     public void run() {
-        //MediaRecorder a = new MediaRecorder();
-        //a.setAudioSource(1);
         if(mRun) {
             return;
         }
@@ -77,30 +74,31 @@ public class IMAudioRecorder implements Runnable {
             audioRecord = new AudioRecord(audioSource, frequency, channelConfiguration, audioEncoding, mMinBufferSize);
             //MediaRecorder.AudioEncoder
             short[] buffer = new short[mMinBufferSize];
+            byte[] pcmSpeexBuffer = new byte[mMinBufferSize * 2];
             audioRecord.startRecording();
 
             isRecording = true ;
+
+            mAmrEncoder.pcm2AmrHeader(getAmrFilePatgh());
+
             while (isRecording) {
                 int bufferReadResult = audioRecord.read(buffer, 0, mMinBufferSize);
                 for (int i = 0; i < bufferReadResult; i++) {
                     dos.writeShort(buffer[i]);
-
-                }
-                mPcmCount++;
-                RecordPCMData rd = new RecordPCMData();
-                synchronized (mPcmMutex) {
-                    rd.size = bufferReadResult;
-                    rd.ready = buffer;
-                    mPcmList.add(rd);
                 }
                 Log.d(TAG, "bufferReadResult = " + bufferReadResult + "mMinBufferSize = " + mMinBufferSize);
+
+                //mIMSpeexDSP.denoise(buffer, 0, pcmSpeexBuffer, bufferReadResult); //降噪
+
+                mAmrEncoder.pcm2AmrProess(new ByteArrayInputStream(pcmSpeexBuffer), getFilePath()); //压缩amr
+
             }
 
             audioRecord.stop();
             audioRecord.release();
             dos.close();
 
-            mIMSpeexDSP.setProcessDenoiseFlag(false);
+            mIMSpeexDSP.close();
 
         } catch (Throwable t) {
             Log.e(TAG, "Recording Failed");
@@ -115,8 +113,28 @@ public class IMAudioRecorder implements Runnable {
         this.isRecording = isRecording;
     }
 
-    class RecordPCMData {
-        protected int size;
-        protected short[] ready = new short[encoder_packagesize];
+    /**
+     * 判断是否有外部存储设备sdcard
+     *
+     * @return true | false
+     */
+    private static boolean isSdcardExit() {
+        if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+            return true;
+        else
+            return false;
+    }
+
+    private String getAmrFilePatgh() {
+        mAudioAmrFileName = "";
+        if (isSdcardExit()) {
+            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            mAudioAmrFileName = fileBasePath + "/vvim/" + df.format(new Date()) + ".amr";
+        }
+        return mAudioAmrFileName;
+    }
+
+    public String getFilePath() {
+        return mAudioAmrFileName;
     }
 }

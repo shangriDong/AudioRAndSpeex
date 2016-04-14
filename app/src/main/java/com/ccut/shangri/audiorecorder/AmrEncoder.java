@@ -51,4 +51,44 @@ public class AmrEncoder {
         }
     }
 
+    public static void pcm2AmrProess(InputStream pcmStream, String amrPath) {
+        try {
+            AmrInputStream ais = new AmrInputStream(pcmStream);
+            OutputStream out = new FileOutputStream(amrPath, true);
+            byte[] buf = new byte[4096];
+            int len = -1;
+
+            while ((len = ais.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            ais.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pcm2AmrHeader(String amrPath) {
+        try {
+            OutputStream out = new FileOutputStream(amrPath);
+            /*
+             * 下面的AMR的文件头,缺少这几个字节是不行的
+             */
+            out.write(0x23);
+            out.write(0x21);
+            out.write(0x41);
+            out.write(0x4D);
+            out.write(0x52);
+            out.write(0x0A);
+
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
