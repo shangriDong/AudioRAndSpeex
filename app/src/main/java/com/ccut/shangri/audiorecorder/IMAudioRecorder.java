@@ -55,6 +55,7 @@ public class IMAudioRecorder implements Runnable {
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm");
         OutputStream os = null;
         DataOutputStream dos = null;
+
         // Delete any previous recording.
         if (file.exists())
             file.delete();
@@ -69,10 +70,6 @@ public class IMAudioRecorder implements Runnable {
         try {
             // Create a DataOuputStream to write the audio data into the saved file.
             mIMSpeexDSP.init();
-
-            FileOutputStream denoiseOS = new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/adcd.pcm");
-            BufferedOutputStream deBos = new BufferedOutputStream(denoiseOS);
-            DataOutputStream dedos = new DataOutputStream(deBos);
 
             os = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(os);
@@ -104,7 +101,6 @@ public class IMAudioRecorder implements Runnable {
             audioRecord.stop();
             audioRecord.release();
             dos.close();
-            dedos.close();
             mIMSpeexDSP.close();
             Log.i("shangri", "-----------------------------end");
 

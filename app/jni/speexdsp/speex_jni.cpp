@@ -40,7 +40,7 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise
 
 	int i = 1;
     speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DENOISE, &i);
-    i = -40;
+    i = -25;
     speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &i);
     i = 0;
     speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_AGC, &i);
