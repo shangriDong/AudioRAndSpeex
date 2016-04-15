@@ -1,5 +1,4 @@
 LOCAL_PATH := $(call my-dir)
-
 include $(CLEAR_VARS)
 
 LOCAL_MODULE:= libspeexdsp
@@ -37,6 +36,11 @@ LOCAL_SRC_FILES +=\
   $(LOCAL_PATH)/libspeexdsp/buffer.c \
   $(LOCAL_PATH)/libspeexdsp/scal.c \
   $(LOCAL_PATH)/speex_jni.cpp
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../amr_nb \
+	$(LOCAL_PATH)/../lib
+
+LOCAL_SHARED_LIBRARIES := libamr-codec
 
 LOCAL_LDLIBS := -llog
 

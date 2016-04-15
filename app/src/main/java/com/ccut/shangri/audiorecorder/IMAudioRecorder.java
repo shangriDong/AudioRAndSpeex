@@ -78,17 +78,16 @@ public class IMAudioRecorder implements Runnable {
             BufferedOutputStream bos = new BufferedOutputStream(os);
             dos = new DataOutputStream(bos);
 
+            Log.i("shangri", "-----------------------------start");
+
             // Create a new AudioRecord object to record the audio.
             mMinBufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
             audioRecord = new AudioRecord(audioSource, frequency, channelConfiguration, audioEncoding, mMinBufferSize);
-            //MediaRecorder.AudioEncoder
+
             short[] buffer = new short[mMinBufferSize];
-            byte[] pcmSpeexBuffer = new byte[mMinBufferSize * 2];
             audioRecord.startRecording();
 
             isRecording = true ;
-
-            mAmrEncoder.pcm2AmrHeader(Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr");
 
             while (isRecording) {
                 int bufferReadResult = audioRecord.read(buffer, 0, mMinBufferSize);
@@ -100,28 +99,6 @@ public class IMAudioRecorder implements Runnable {
                 short[] pcm = new short[bufferReadResult];
 
                 mIMSpeexDSP.denoise(buffer, 0, pcm, bufferReadResult); //降噪
-
-                ByteBuffer buffer_byte = ByteBuffer.allocate(pcm.length * 2);
-                ShortBuffer shortBuffer = buffer_byte.asShortBuffer();
-                shortBuffer.put(pcm);
-                byte[]data_new = new byte[pcm.length * 2];
-                buffer_byte.get(data_new);
-
-                for (int i = 0; i < pcm.length * 2; i+=2) {
-                    byte a = data_new[i];
-                    data_new[i] = data_new[i + 1];
-                    data_new[i + 1] = a;
-                }
-
-                for (int i = 0; i < bufferReadResult / 160; i++) {
-                    byte[] data_1 = new byte[bufferReadResult * 2 / 3];
-                    System.arraycopy(data_new, i * 160 * 2, data_1, 0, 160 * 2);
-                    mAmrEncoder.pcm2AmrProess(new ByteArrayInputStream(data_1),
-                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr"); //压缩amr
-                }
-                for (int i = 0; i < bufferReadResult; i++) {
-                    dedos.writeShort(pcm[i]);
-                }
             }
 
             audioRecord.stop();
@@ -129,6 +106,7 @@ public class IMAudioRecorder implements Runnable {
             dos.close();
             dedos.close();
             mIMSpeexDSP.close();
+            Log.i("shangri", "-----------------------------end");
 
         } catch (Throwable t) {
             Log.e(TAG, "Recording Failed");

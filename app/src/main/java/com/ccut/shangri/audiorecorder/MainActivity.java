@@ -82,7 +82,16 @@ public class MainActivity extends Activity {
                     }
                     break;
                 case R.id.amr_btn:
-                    startTransfer();
+                    //startTransfer();
+                    MediaPlayer mpQAQ=new MediaPlayer();
+                    try {
+                        mpQAQ.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/amrQAQ.amr");
+                        Log.e("shangri", "amrQAQ.amr play!!");
+                        mpQAQ.prepare();
+                        mpQAQ.start();
+                    } catch (IOException e) {
+                        Log.e("shangri", "" +e);
+                    }
                     break;
                 default:
                     break;
