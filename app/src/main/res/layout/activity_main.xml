@@ -40,7 +40,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/play_amr_btn"
-        android:text="播放降噪后amr"
+        android:text="播放降噪后pcm"
         android:layout_below="@id/start_record_btn"
         android:layout_toRightOf="@id/start_record_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/play_denose_amr_btn"
+        android:text="播放降噪后Amr"
+        android:layout_below="@id/start_record_btn"
+        android:layout_toRightOf="@id/play_amr_btn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/amr_btn"
+        android:text="直接压缩AMR"
+        android:layout_below="@id/preocess_play_amr_btn"
+        android:layout_toRightOf="@id/play_amr_btn"/>
 </RelativeLayout>

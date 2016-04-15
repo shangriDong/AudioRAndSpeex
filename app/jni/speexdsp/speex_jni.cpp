@@ -18,33 +18,38 @@ static int codec_open = 0;
 
 SpeexPreprocessState *denoise_state = NULL;
 
-static int frame_size;;
-
 static JavaVM *gJavaVM;
 
 static jbyte output_buffer[10000 * 2];
 
+static int frame_size = 160;
+static int sampling_rate = 8000;
+
 extern "C"
-JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_open (JNIEnv *env, jobject obj, jint size)
+JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise (JNIEnv *env, jobject obj, jint size, jint rate)
 {
-    LOGD("shangri IMSpeexDSP_open");
+    LOGD("shangri Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise");
 	if (codec_open++ != 0)
         return -1;
 
 	frame_size = size;
-	denoise_state = speex_preprocess_state_init(320, 16000);
+	sampling_rate = rate;
+	denoise_state = speex_preprocess_state_init(frame_size, sampling_rate);
 
-	int denoise = 1;
-    int noiseSuppress = -10;
-    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DENOISE, &denoise);// 降噪
-    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &noiseSuppress);// 设置噪音的dB
+	int i = 1;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DENOISE, &i);
+    i = -40;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_NOISE_SUPPRESS, &i);
+    i = 0;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_AGC, &i);
+    i = 0;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DEREVERB, &i);
+    float f = 0.0;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DEREVERB_DECAY, &f);
+    f = 0.0;
+    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_DEREVERB_LEVEL, &f);
 
-	/*int agc = 1;
-    int level = 24000;
-    //actually default is 8000(0,32768),here make it louder for voice is not loudy enough by default.
-    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_AGC, &agc);// 增益
-    speex_preprocess_ctl(denoise_state, SPEEX_PREPROCESS_SET_AGC_LEVEL, &level);*/
-    LOGD("shangri IMSpeexDSP_open success!");
+    LOGD("shangri Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise success!");
 }
 
 extern "C"
@@ -57,27 +62,26 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_close (JNIE
 
 extern "C"
 JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_denoise (JNIEnv *env, jobject obj,
-        jshortArray lin, jint offset, jbyteArray encoded, jint size)
+        jshortArray lin, jint offset, jshortArray encoded, jint size)
 {
     LOGD("shangri IMSpeexDSP_denoise start");
-	//frame_size = size;
 
 	if (!codec_open)
         return -1;
 
-	short *buffer=(short *)malloc(sizeof(short) * frame_size);
-
-
-    //env->GetShortArrayRegion(lin, offset, size, buffer);
-    //env->GetShortArrayRegion(lin, offset, size, (short *)output_buffer);
-
-    //降噪增益处理
-    if (speex_preprocess_run(denoise_state, buffer) == 0)
-    {
-        LOGD("shangri IMSpeexDSP_denoise 静音或噪音！");
-    }
-
-    //env->SetByteArrayRegion (encoded, offset, frame_size, output_buffer);
+	short *buffer=(short *)malloc(sizeof(short) * size);
+	
+	env->GetShortArrayRegion(lin, offset, size, buffer);
+	
+	for (int i = 0; i < size/frame_size; i++)
+	{
+		//降噪增益处理
+		if (speex_preprocess_run(denoise_state, (buffer + i * frame_size)) == 0)
+		{
+			LOGD("shangri IMSpeexDSP_denoise 静音或噪音！");
+		}
+	}
+	env->SetShortArrayRegion(encoded, offset, size, buffer);
 
 	free(buffer);
     LOGD("shangri IMSpeexDSP_denoise end");

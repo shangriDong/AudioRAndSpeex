@@ -15,7 +15,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +68,12 @@ public class IMAudioRecorder implements Runnable {
 
         try {
             // Create a DataOuputStream to write the audio data into the saved file.
+            mIMSpeexDSP.init();
+
+            FileOutputStream denoiseOS = new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/adcd.pcm");
+            BufferedOutputStream deBos = new BufferedOutputStream(denoiseOS);
+            DataOutputStream dedos = new DataOutputStream(deBos);
+
             os = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(os);
             dos = new DataOutputStream(bos);
@@ -79,25 +88,46 @@ public class IMAudioRecorder implements Runnable {
 
             isRecording = true ;
 
-            mAmrEncoder.pcm2AmrHeader(getAmrFilePatgh());
+            mAmrEncoder.pcm2AmrHeader(Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr");
 
             while (isRecording) {
                 int bufferReadResult = audioRecord.read(buffer, 0, mMinBufferSize);
                 for (int i = 0; i < bufferReadResult; i++) {
                     dos.writeShort(buffer[i]);
                 }
-                Log.d(TAG, "bufferReadResult = " + bufferReadResult + "mMinBufferSize = " + mMinBufferSize);
+                Log.d(TAG, "bufferReadResult = " + bufferReadResult + " mMinBufferSize = " + mMinBufferSize);
 
-                //mIMSpeexDSP.denoise(buffer, 0, pcmSpeexBuffer, bufferReadResult); //降噪
+                short[] pcm = new short[bufferReadResult];
 
-                mAmrEncoder.pcm2AmrProess(new ByteArrayInputStream(pcmSpeexBuffer), getFilePath()); //压缩amr
+                mIMSpeexDSP.denoise(buffer, 0, pcm, bufferReadResult); //降噪
 
+                ByteBuffer buffer_byte = ByteBuffer.allocate(pcm.length * 2);
+                ShortBuffer shortBuffer = buffer_byte.asShortBuffer();
+                shortBuffer.put(pcm);
+                byte[]data_new = new byte[pcm.length * 2];
+                buffer_byte.get(data_new);
+
+                for (int i = 0; i < pcm.length * 2; i+=2) {
+                    byte a = data_new[i];
+                    data_new[i] = data_new[i + 1];
+                    data_new[i + 1] = a;
+                }
+
+                for (int i = 0; i < bufferReadResult / 160; i++) {
+                    byte[] data_1 = new byte[bufferReadResult * 2 / 3];
+                    System.arraycopy(data_new, i * 160 * 2, data_1, 0, 160 * 2);
+                    mAmrEncoder.pcm2AmrProess(new ByteArrayInputStream(data_1),
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr"); //压缩amr
+                }
+                for (int i = 0; i < bufferReadResult; i++) {
+                    dedos.writeShort(pcm[i]);
+                }
             }
 
             audioRecord.stop();
             audioRecord.release();
             dos.close();
-
+            dedos.close();
             mIMSpeexDSP.close();
 
         } catch (Throwable t) {

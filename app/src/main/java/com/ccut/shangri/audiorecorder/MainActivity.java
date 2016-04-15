@@ -1,10 +1,14 @@
 package com.ccut.shangri.audiorecorder;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.IOException;
 
 public class MainActivity extends Activity {
 
@@ -15,7 +19,9 @@ public class MainActivity extends Activity {
     private IMAudioRecorder mAudioRecorder;
     private IMAudioTrack mAudioTrackPCM;
     private IMAudioTrack mAudioTrackAMR;
-    private Button mPlayAmrBtn;
+    private Button mPlayDenoisePCMBtn;
+    private Button mPlayDenoiseAmrBtn;
+    private Button mZhiyaAmrBtn;
 
     private IMSpeexDSP mIMSpeexDSP;
 
@@ -25,7 +31,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mAudioTrackPCM = new IMAudioTrack("/reverseme.pcm");
-        mAudioTrackAMR = new IMAudioTrack("/denose.pcm");
+        mAudioTrackAMR = new IMAudioTrack("/adcd.pcm");
 
         mAudioRecorder = new IMAudioRecorder();
         mIMSpeexDSP = new IMSpeexDSP();
@@ -38,7 +44,9 @@ public class MainActivity extends Activity {
         mStopRecordBtn = (Button)findViewById(R.id.stop_record_btn);
         mPlayPcmBtn = (Button)findViewById(R.id.play_pcm_btn);
         mDenoiseAndPlayAmrBtn = (Button)findViewById(R.id.preocess_play_amr_btn);
-        mPlayAmrBtn = (Button)findViewById(R.id.play_amr_btn);
+        mPlayDenoisePCMBtn = (Button)findViewById(R.id.play_amr_btn);
+        mPlayDenoiseAmrBtn = (Button)findViewById(R.id.play_denose_amr_btn);
+        mZhiyaAmrBtn = (Button)findViewById(R.id.amr_btn);
     }
 
     Button.OnClickListener mL = new Button.OnClickListener() {
@@ -60,7 +68,21 @@ public class MainActivity extends Activity {
                     Log.d("shangri", "preocess_play_amr_btn end");
                     break;
                 case R.id.play_amr_btn:
+                    Log.d("shangri", "play pcm /adcd.pcm");
                     new Thread(mAudioTrackAMR).start();
+                    break;
+                case R.id.play_denose_amr_btn:
+                    MediaPlayer mp=new MediaPlayer();
+                    try {
+                        mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr");
+                        mp.prepare();
+                        mp.start();
+                    } catch (IOException e) {
+                        Log.e("shangri", "" +e);
+                    }
+                    break;
+                case R.id.amr_btn:
+                    startTransfer();
                     break;
                 default:
                     break;
@@ -73,7 +95,9 @@ public class MainActivity extends Activity {
         mStopRecordBtn.setOnClickListener(mL);
         mPlayPcmBtn.setOnClickListener(mL);
         mDenoiseAndPlayAmrBtn.setOnClickListener(mL);
-        mPlayAmrBtn.setOnClickListener(mL);
+        mPlayDenoisePCMBtn.setOnClickListener(mL);
+        mPlayDenoiseAmrBtn.setOnClickListener(mL);
+        mZhiyaAmrBtn.setOnClickListener(mL);
     }
 
     private void startTransfer() {
@@ -81,7 +105,16 @@ public class MainActivity extends Activity {
 
             @Override
             public void onSuccess() {
-                transferSuccess();
+                Log.i("shangri", "play testZhiya");
+                //transferSuccess();
+                MediaPlayer mp=new MediaPlayer();
+                try {
+                    mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/testZhiya.amr");
+                    mp.prepare();
+                    mp.start();
+                } catch (IOException e) {
+                    Log.e("shangri", "" +e);
+                }
             }
 
             @Override

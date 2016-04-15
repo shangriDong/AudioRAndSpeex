@@ -15,12 +15,12 @@ public class IMSpeexDSP {
     private final static String TAG = "shangri";
 
     public IMSpeexDSP() {
-        init(896);
+        init();
     }
 
-    public void init(int size) {
+    public void init() {
         load();
-        open(size);
+        initDenoise(160, 8000);
         Log.d(TAG, "speex opened");
     }
 
@@ -36,9 +36,9 @@ public class IMSpeexDSP {
         }
     }
 
-    public native int open(int size);
+    public native int initDenoise(int size, int rate);
 
-    public native int denoise(short lin[], int offset, byte encoded[], int size);
+    public native int denoise(short lin[], int offset, short encoded[], int size);
 
     public native void close();
 

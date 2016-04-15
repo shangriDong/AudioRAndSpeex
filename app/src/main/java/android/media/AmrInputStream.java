@@ -1,5 +1,7 @@
 package android.media;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,6 +41,7 @@ public final class AmrInputStream extends InputStream {
     public AmrInputStream(InputStream inputStream) {
         mInputStream = inputStream;
         mGae = GsmAmrEncoderNew();
+        Log.d("shangri", "mGae = " + mGae);
         GsmAmrEncoderInitialize(mGae);
     }
 

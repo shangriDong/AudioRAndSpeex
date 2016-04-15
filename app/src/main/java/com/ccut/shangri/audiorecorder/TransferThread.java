@@ -24,15 +24,15 @@ public class TransferThread extends Thread{
 		//AmrEncoder.pcm2Amr(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm",
 				//Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.amr");
 		String rootPath = Environment.getExternalStorageDirectory().getPath();
-        String amrPath = rootPath + "/test.amr";
-        try {
-            InputStream pcmStream = context.getAssets().open(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm");
-            AmrEncoder.pcm2Amr(pcmStream, amrPath);
+        String amrPath = rootPath + "/testZhiya.amr";
+        //try {
+            //InputStream pcmStream = context.getAssets().open(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm");
+            AmrEncoder.pcm2Amr(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm", amrPath);
             callback.onSuccess();
-        } catch (IOException e) {
-        	callback.onFailed();
-            e.printStackTrace();
-        }
+        //} catch (IOException e) {
+        	//callback.onFailed();
+            //e.printStackTrace();
+        //}
 	}
 	
 	
