@@ -20,7 +20,7 @@ public class IMSpeexDSPAndEnc {
 
     public void init() {
         load();
-        initDenoise(160, 8000);
+        init(160, 8000);
         Log.d(TAG, "speex opened");
     }
 
@@ -36,7 +36,7 @@ public class IMSpeexDSPAndEnc {
         }
     }
 
-    public static native int initDenoise(int size, int rate);
+    public static native int init(int size, int rate);
 
     public static native int denoiseAndEnc(short lin[], int offset, short encoded[], int size);
 

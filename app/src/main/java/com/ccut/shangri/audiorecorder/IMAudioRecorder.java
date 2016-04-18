@@ -85,9 +85,9 @@ public class IMAudioRecorder implements Runnable {
                 }
                 Log.d(TAG, "bufferReadResult = " + bufferReadResult + " mMinBufferSize = " + mMinBufferSize);
 
-                short[] pcm = new short[bufferReadResult];
+                //short[] pcm = new short[bufferReadResult];
 
-                mIMSpeexDSPAndEnc.denoiseAndEnc(buffer, 0, pcm, bufferReadResult); //降噪
+                mIMSpeexDSPAndEnc.denoiseAndEnc(buffer, 0, null, bufferReadResult); //降噪
             }
 
             audioRecord.stop();
@@ -107,6 +107,18 @@ public class IMAudioRecorder implements Runnable {
 
     public void setRecording(boolean isRecording) {
         this.isRecording = isRecording;
+    }
+
+    public int getVolumeMax(short[] short_buffer) {
+        int max = 0;
+        if (short_buffer.length > 0) {
+            for (int i = 0; i < short_buffer.length; i++) {
+                if (Math.abs(short_buffer[i]) > max) {
+                    max = Math.abs(short_buffer[i]);
+                }
+            }
+        }
+        return max;
     }
 
     /**

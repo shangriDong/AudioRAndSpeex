@@ -26,10 +26,8 @@ static int frame_size = 160;
 static int sampling_rate = 8000;
 static int count = 0;
 
-#define JNIFUNCTION_PREFIX Java_com_ccut_shangri_audiorecorder_IMSpeexDSPAndEnc_functionName
-
 extern "C"
-JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_initDenoise (JNIEnv *env, jobject obj, jint size, jint rate)
+JNIEXPORT jint JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSPAndEnc_init (JNIEnv *env, jobject obj, jint size, jint rate)
 {
     LOGD("shangri Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise");
 	if (codec_open++ != 0)
@@ -60,7 +58,7 @@ JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_initDenoise (JNIEnv *env, jobject obj,
     count = 0;
 }
 extern "C"
-JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_close (JNIEnv *env, jobject obj, jint size)
+JNIEXPORT jint JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSPAndEnc_close (JNIEnv *env, jobject obj, jint size)
 {
 	if (!codec_open)
         return -1;
@@ -72,7 +70,7 @@ JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_close (JNIEnv *env, jobject obj, jint 
 	codec_open = 0;
 }
 extern "C"
-JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_denoiseAndEnc (JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSPAndEnc_denoiseAndEnc (JNIEnv *env, jobject obj,
         jshortArray lin, jint offset, jshortArray encoded, jint size)
 {
     LOGD("shangri IMSpeexDSP_denoise start");
