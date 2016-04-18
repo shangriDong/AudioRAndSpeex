@@ -11,10 +11,10 @@ import java.util.Objects;
 /**
  * Created by admin on 2016/4/11.
  */
-public class IMSpeexDSP {
+public class IMSpeexDSPAndEnc {
     private final static String TAG = "shangri";
 
-    public IMSpeexDSP() {
+    public IMSpeexDSPAndEnc() {
         init();
     }
 
@@ -36,11 +36,11 @@ public class IMSpeexDSP {
         }
     }
 
-    public native int initDenoise(int size, int rate);
+    public static native int initDenoise(int size, int rate);
 
-    public native int denoise(short lin[], int offset, short encoded[], int size);
+    public static native int denoiseAndEnc(short lin[], int offset, short encoded[], int size);
 
-    public native void close();
+    public static native void close();
 
     public static native void file();
 }

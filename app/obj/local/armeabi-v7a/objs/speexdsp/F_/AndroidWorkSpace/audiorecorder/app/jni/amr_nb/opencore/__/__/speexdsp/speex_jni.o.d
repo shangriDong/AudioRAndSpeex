@@ -6,7 +6,7 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/An
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/android/api-level.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/string.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/malloc.h \
- D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/unistd.h \
+ D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/stdio.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/types.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/stdint.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/_types.h \
@@ -19,6 +19,7 @@ F:/AndroidWorkSpace/audiorecorder/app//obj/local/armeabi-v7a/objs/speexdsp/F_/An
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/linux/types.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/machine/kernel.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/sysmacros.h \
+ D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/unistd.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/select.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/time.h \
  D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/linux/time.h \
@@ -59,7 +60,7 @@ D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/string.h:
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/malloc.h:
 
-D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/unistd.h:
+D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/stdio.h:
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/types.h:
 
@@ -84,6 +85,8 @@ D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/linux/types
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/machine/kernel.h:
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/sysmacros.h:
+
+D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/unistd.h:
 
 D:/Android/android-ndk-r10d/platforms/android-3/arch-arm/usr/include/sys/select.h:
 

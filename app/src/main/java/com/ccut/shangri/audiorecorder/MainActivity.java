@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
     private Button mPlayDenoiseAmrBtn;
     private Button mZhiyaAmrBtn;
 
-    private IMSpeexDSP mIMSpeexDSP;
+    private IMSpeexDSPAndEnc mIMSpeexDSPAndEnc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
         mAudioTrackAMR = new IMAudioTrack("/adcd.pcm");
 
         mAudioRecorder = new IMAudioRecorder();
-        mIMSpeexDSP = new IMSpeexDSP();
+        mIMSpeexDSPAndEnc = new IMSpeexDSPAndEnc();
         findButton();
         setOnClinkListene();
     }
@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.preocess_play_amr_btn:
                     Log.d("shangri", "preocess_play_amr_btn start");
-                    new Thread(new SpeexThread()).start();
+                    //new Thread(new SpeexThread()).start();
                     Log.d("shangri", "preocess_play_amr_btn end");
                     break;
                 case R.id.play_amr_btn:
@@ -82,7 +82,6 @@ public class MainActivity extends Activity {
                     }
                     break;
                 case R.id.amr_btn:
-                    //startTransfer();
                     MediaPlayer mpQAQ=new MediaPlayer();
                     try {
                         mpQAQ.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/amrQAQ.amr");
@@ -109,46 +108,4 @@ public class MainActivity extends Activity {
         mZhiyaAmrBtn.setOnClickListener(mL);
     }
 
-    private void startTransfer() {
-        new TransferThread(this, new TransferThread.TransferCallback() {
-
-            @Override
-            public void onSuccess() {
-                Log.i("shangri", "play testZhiya");
-                //transferSuccess();
-                MediaPlayer mp=new MediaPlayer();
-                try {
-                    mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/testZhiya.amr");
-                    mp.prepare();
-                    mp.start();
-                } catch (IOException e) {
-                    Log.e("shangri", "" +e);
-                }
-            }
-
-            @Override
-            public void onFailed() {
-            }
-        }).start();
-    }
-
-    private void transferSuccess() {
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Log.i("shangri", "encode success");
-                //waitDialog.dismiss();
-                //hintView.setText(getResources().getString(R.string.transfer_result));
-                //ToastUtil.showShort(MainActivity.this, R.string.success_hint);
-            }
-        });
-    }
-
-    class SpeexThread implements Runnable {
-        @Override
-        public void run() {
-            IMSpeexDSP.file();
-        }
-    }
 }

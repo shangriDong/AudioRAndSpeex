@@ -88,9 +88,9 @@ int amr_enc_init(const char*outfile, int bitsPerSample, int channels, int sample
 		return 1;
 	}
 
+	//Write Amr header
 	fwrite("#!AMR\n", 1, 6, out);
 	fclose(out);
-
 
 	return 0;
 }

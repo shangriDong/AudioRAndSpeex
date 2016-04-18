@@ -1,27 +1,19 @@
 package com.ccut.shangri.audiorecorder;
 
-import android.media.AmrInputStream;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by admin on 2016/4/11.
@@ -37,12 +29,12 @@ public class IMAudioRecorder implements Runnable {
     private AudioRecord audioRecord;
     private int mMinBufferSize; //采集数据需要的缓冲区的大小
     private boolean mRun = false;
-    private IMSpeexDSP mIMSpeexDSP;
-    private AmrEncoder mAmrEncoder;
+    private IMSpeexDSPAndEnc mIMSpeexDSPAndEnc;
+    //private AmrEncoder mAmrEncoder;
     private String mAudioAmrFileName = "testa";
     public IMAudioRecorder() {
-        mIMSpeexDSP = new IMSpeexDSP();
-        mAmrEncoder = new AmrEncoder();
+        mIMSpeexDSPAndEnc = new IMSpeexDSPAndEnc();
+        //mAmrEncoder = new AmrEncoder();
     }
 
     @Override
@@ -69,7 +61,7 @@ public class IMAudioRecorder implements Runnable {
 
         try {
             // Create a DataOuputStream to write the audio data into the saved file.
-            mIMSpeexDSP.init();
+            mIMSpeexDSPAndEnc.init();
 
             os = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(os);
@@ -95,13 +87,13 @@ public class IMAudioRecorder implements Runnable {
 
                 short[] pcm = new short[bufferReadResult];
 
-                mIMSpeexDSP.denoise(buffer, 0, pcm, bufferReadResult); //降噪
+                mIMSpeexDSPAndEnc.denoiseAndEnc(buffer, 0, pcm, bufferReadResult); //降噪
             }
 
             audioRecord.stop();
             audioRecord.release();
             dos.close();
-            mIMSpeexDSP.close();
+            mIMSpeexDSPAndEnc.close();
             Log.i("shangri", "-----------------------------end");
 
         } catch (Throwable t) {

@@ -1,6 +1,7 @@
 #include <jni.h>
 
 #include <string.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include <speex/speex_echo.h>
@@ -9,9 +10,6 @@
 #include <android/log.h>
 
 #include "../amr_nb/amr-enc.h"
-
-/*#include <fstream>
-using namespace std;*/
 
 #define TAG    "shangri" // 这个是自定义的LOG的标识  
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__) // 定义LOGD类型  
@@ -27,8 +25,11 @@ static jbyte output_buffer[10000 * 2];
 static int frame_size = 160;
 static int sampling_rate = 8000;
 static int count = 0;
+
+#define JNIFUNCTION_PREFIX Java_com_ccut_shangri_audiorecorder_IMSpeexDSPAndEnc_functionName
+
 extern "C"
-JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise (JNIEnv *env, jobject obj, jint size, jint rate)
+JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_initDenoise (JNIEnv *env, jobject obj, jint size, jint rate)
 {
     LOGD("shangri Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise");
 	if (codec_open++ != 0)
@@ -59,7 +60,7 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_initDenoise
     count = 0;
 }
 extern "C"
-JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_close (JNIEnv *env, jobject obj, jint size)
+JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_close (JNIEnv *env, jobject obj, jint size)
 {
 	if (!codec_open)
         return -1;
@@ -71,7 +72,7 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_close (JNIE
 	codec_open = 0;
 }
 extern "C"
-JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_denoise (JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL JNIFUNCTION_PREFIX_denoiseAndEnc (JNIEnv *env, jobject obj,
         jshortArray lin, jint offset, jshortArray encoded, jint size)
 {
     LOGD("shangri IMSpeexDSP_denoise start");
@@ -92,11 +93,10 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_denoise (JN
 		}
 
 		handleAmrEnc("/sdcard/amrQAQ.amr", 1, buffer + i * frame_size, frame_size);
-        LOGD("shangri count = %d", ++count);
+        ++count;
 	}
-	//env->SetShortArrayRegion(encoded, offset, size, buffer);
-
 	free(buffer);
+    LOGD("shangri count = %d", count);
     LOGD("shangri IMSpeexDSP_denoise end");
 }
 /*
@@ -104,7 +104,7 @@ JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_denoise (JN
 static int filecode = 0;
 static SpeexPreprocessState *st;
 extern "C"
-JNIEXPORT int JNICALL Java_com_ccut_shangri_audiorecorder_IMSpeexDSP_file (JNIEnv *env, jobject obj,
+JNIEXPORT int JNICALL FUNCTION_PREFIX_file (JNIEnv *env, jobject obj,
         jshortArray lin, jint offset, jbyteArray encoded, jint size)
 {
     if(filecode++ != 0)
