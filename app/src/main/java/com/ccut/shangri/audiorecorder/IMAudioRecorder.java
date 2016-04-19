@@ -14,13 +14,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by admin on 2016/4/11.
  */
 public class IMAudioRecorder implements Runnable {
+    private static final Logger log = Logger.getLogger("IMAudioRecorder.class");
     private final static SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
-    private static final String TAG = "Shangri";
     private int frequency = 8000; //采样频率，每秒钟能够采样的次数
     private int channelConfiguration = AudioFormat.CHANNEL_IN_DEFAULT; //声道设置 MONO单声道
     private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT; //编码格式PCM 16BIT
@@ -30,11 +32,17 @@ public class IMAudioRecorder implements Runnable {
     private int mMinBufferSize; //采集数据需要的缓冲区的大小
     private boolean mRun = false;
     private IMSpeexDSPAndEnc mIMSpeexDSPAndEnc;
-    //private AmrEncoder mAmrEncoder;
-    private String mAudioAmrFileName = "testa";
-    public IMAudioRecorder() {
+    private String mAudioAmrFileName = "test";
+    private int frameCount = 0;
+    private OnUpdateVolumeListener mListener;
+    private long mStartTime;
+    private long mEndTime;
+    private long mLastDurationTime;
+
+    public IMAudioRecorder(OnUpdateVolumeListener l) {
         mIMSpeexDSPAndEnc = new IMSpeexDSPAndEnc();
-        //mAmrEncoder = new AmrEncoder();
+        mListener = l;
+        log.setLevel(Level.INFO);
     }
 
     @Override
@@ -44,30 +52,11 @@ public class IMAudioRecorder implements Runnable {
         }
 
         mRun = true;
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/reverseme.pcm");
-        OutputStream os = null;
-        DataOutputStream dos = null;
-
-        // Delete any previous recording.
-        if (file.exists())
-            file.delete();
-
-        // Create the new file.
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to create " + file.toString());
-        }
-
         try {
             // Create a DataOuputStream to write the audio data into the saved file.
             mIMSpeexDSPAndEnc.init();
 
-            os = new FileOutputStream(file);
-            BufferedOutputStream bos = new BufferedOutputStream(os);
-            dos = new DataOutputStream(bos);
-
-            Log.i("shangri", "-----------------------------start");
+            log.info("Recording start");
 
             // Create a new AudioRecord object to record the audio.
             mMinBufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
@@ -75,29 +64,34 @@ public class IMAudioRecorder implements Runnable {
 
             short[] buffer = new short[mMinBufferSize];
             audioRecord.startRecording();
+            mStartTime = System.currentTimeMillis();
 
             isRecording = true ;
-
             while (isRecording) {
                 int bufferReadResult = audioRecord.read(buffer, 0, mMinBufferSize);
-                for (int i = 0; i < bufferReadResult; i++) {
-                    dos.writeShort(buffer[i]);
-                }
-                Log.d(TAG, "bufferReadResult = " + bufferReadResult + " mMinBufferSize = " + mMinBufferSize);
+                mIMSpeexDSPAndEnc.denoiseAndEnc(buffer, 0, bufferReadResult); //降噪
 
-                //short[] pcm = new short[bufferReadResult];
+                log.info("bufferReadResult = " + bufferReadResult + " mMinBufferSize = " + mMinBufferSize);
 
-                mIMSpeexDSPAndEnc.denoiseAndEnc(buffer, 0, null, bufferReadResult); //降噪
+                frameCount += bufferReadResult / 160;
+                //if (frameCount / 200 == 0) {
+                int temp = getVolumeMax(buffer);
+                mListener.updateVolumeMax(temp);
+                //}
+                log.info("volume = " + temp);
             }
 
             audioRecord.stop();
             audioRecord.release();
-            dos.close();
             mIMSpeexDSPAndEnc.close();
-            Log.i("shangri", "-----------------------------end");
+
+            mEndTime = System.currentTimeMillis();
+            mLastDurationTime = mEndTime - mStartTime;
+            log.info("Recording stop, duration = " + mLastDurationTime);
+            frameCount = 0;
 
         } catch (Throwable t) {
-            Log.e(TAG, "Recording Failed");
+            log.info("Recording Failed");
         } finally {
 
         }
@@ -109,7 +103,7 @@ public class IMAudioRecorder implements Runnable {
         this.isRecording = isRecording;
     }
 
-    public int getVolumeMax(short[] short_buffer) {
+    private int getVolumeMax(short[] short_buffer) {
         int max = 0;
         if (short_buffer.length > 0) {
             for (int i = 0; i < short_buffer.length; i++) {
@@ -144,5 +138,13 @@ public class IMAudioRecorder implements Runnable {
 
     public String getFilePath() {
         return mAudioAmrFileName;
+    }
+
+    public long getLastDurationTime() {
+        return mLastDurationTime/1000 == 0 ?  1L : mLastDurationTime/1000; //单位：秒
+    }
+
+    public interface OnUpdateVolumeListener {
+        void updateVolumeMax(int volume);
     }
 }

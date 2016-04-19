@@ -27,14 +27,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/play_pcm_btn"
         android:text="播放原始数据"
-        android:layout_toRightOf="@id/stop_record_btn"/>
+        android:layout_toRightOf="@id/stop_record_btn"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/preocess_play_amr_btn"
         android:text="降噪"
-        android:layout_below="@id/start_record_btn"/>
+        android:layout_below="@id/start_record_btn"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -42,7 +44,8 @@
         android:id="@+id/play_amr_btn"
         android:text="播放降噪后pcm"
         android:layout_below="@id/start_record_btn"
-        android:layout_toRightOf="@id/start_record_btn"/>
+        android:layout_toRightOf="@id/start_record_btn"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -58,5 +61,6 @@
         android:id="@+id/amr_btn"
         android:text="直接压缩AMR"
         android:layout_below="@id/preocess_play_amr_btn"
-        android:layout_toRightOf="@id/play_amr_btn"/>
+        android:layout_toRightOf="@id/play_amr_btn"
+        android:visibility="gone"/>
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.ccut.shangri.audiorecorder;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
     private Button mPlayDenoisePCMBtn;
     private Button mPlayDenoiseAmrBtn;
     private Button mZhiyaAmrBtn;
+    private IMAudioRecorder.OnUpdateVolumeListener mlistener;
 
     private IMSpeexDSPAndEnc mIMSpeexDSPAndEnc;
 
@@ -33,7 +35,13 @@ public class MainActivity extends Activity {
         mAudioTrackPCM = new IMAudioTrack("/reverseme.pcm");
         mAudioTrackAMR = new IMAudioTrack("/adcd.pcm");
 
-        mAudioRecorder = new IMAudioRecorder();
+        mlistener = new IMAudioRecorder.OnUpdateVolumeListener() {
+            @Override
+            public void updateVolumeMax(int volume) {
+                Log.i("shangri", "volume = " + volume);
+            }
+        };
+        mAudioRecorder = new IMAudioRecorder(mlistener);
         mIMSpeexDSPAndEnc = new IMSpeexDSPAndEnc();
         findButton();
         setOnClinkListene();
@@ -72,7 +80,7 @@ public class MainActivity extends Activity {
                     new Thread(mAudioTrackAMR).start();
                     break;
                 case R.id.play_denose_amr_btn:
-                    MediaPlayer mp=new MediaPlayer();
+                    MediaPlayer mp = new MediaPlayer();
                     try {
                         mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr");
                         mp.prepare();
@@ -84,7 +92,7 @@ public class MainActivity extends Activity {
                 case R.id.amr_btn:
                     MediaPlayer mpQAQ=new MediaPlayer();
                     try {
-                        mpQAQ.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/amrQAQ.amr");
+                        mpQAQ.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/denoise_amr.amr");
                         Log.e("shangri", "amrQAQ.amr play!!");
                         mpQAQ.prepare();
                         mpQAQ.start();

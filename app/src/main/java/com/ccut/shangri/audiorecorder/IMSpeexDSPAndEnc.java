@@ -7,21 +7,24 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Created by admin on 2016/4/11.
  */
 public class IMSpeexDSPAndEnc {
-    private final static String TAG = "shangri";
+    private static final Logger log = Logger.getLogger("IMSpeexDSPAndEnc.class");
+    private static final int SAMPLING_NUM = 160;
+    private static final int FREQUENCY = 8000;
+    private static final int CHANNEL = 1;
 
     public IMSpeexDSPAndEnc() {
-        init();
+        load();
     }
 
     public void init() {
-        load();
-        init(160, 8000);
-        Log.d(TAG, "speex opened");
+        init(SAMPLING_NUM, FREQUENCY, CHANNEL);
+        log.info("speex opened");
     }
 
     public void destory() {
@@ -36,11 +39,9 @@ public class IMSpeexDSPAndEnc {
         }
     }
 
-    public static native int init(int size, int rate);
+    public static native int init(int size, int rate, int channel);
 
-    public static native int denoiseAndEnc(short lin[], int offset, short encoded[], int size);
+    public static native int denoiseAndEnc(short lin[], int offset, int size);
 
     public static native void close();
-
-    public static native void file();
 }
